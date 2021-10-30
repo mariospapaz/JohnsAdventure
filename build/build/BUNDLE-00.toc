@@ -1,4 +1,0 @@
-([("John's Adventure v0.23 MacOS",
-   "/Users/runner/work/JohnsAdventure/JohnsAdventure/dist/John's Adventure "
-   'v0.23 MacOS',
-   'EXECUTABLE')],)
