@@ -22,6 +22,7 @@ class GameState:
         # ------- SCREEN -----------------
         self.display, self.screen = DISPLAY, DISPLAY
         self.W, self.H = self.display.get_size()
+        self.dt = 0  # wil be updated in update method
 
         # -------- WORLD's OBJECTS ----------
         self.player = player_instance  # get player to pass it as an argument in certain func of obj
@@ -126,10 +127,11 @@ class GameState:
                         obj_moving.switch_directions(blocked_direction=direction)  # switch NPCs direction for eg.
                     break
 
-    def update(self, camera):
+    def update(self, camera, dt):
 
         # update the game values
-        self.player.rooms_objects = self.objects   # ain't it useless now ?
+        self.player.rooms_objects = self.objects 
+        self.dt = dt
 
         # display background
         self.display.blit(self.world, -camera.offset.xy)

@@ -66,7 +66,7 @@ class GameManager:
         self.loading_screen = LoadingScreen(self.DISPLAY)
         self.menu_manager = Menu(self.DISPLAY, self.blacksword, self.ui)
         self.interface = Interface(self.DISPLAY, self.ui, self.font, self.dt)
-        self.pause_menu = PauseMenu(self.DISPLAY)
+        self.pause_menu = PauseMenu(self.DISPLAY, self.ui)
 
         # ------------- PLAYER ----------------
         self.player = Player(
@@ -153,7 +153,7 @@ class GameManager:
 
             else:
                 self.DISPLAY.fill((0, 0, 0))
-                update = self.state_manager[self.state].update(self.player.camera)
+                update = self.state_manager[self.state].update(self.player.camera, self.dt)
                 if update is not None:  # if a change of state is detected
                     self.loading = True  # start a loading screen (update="next_state_name")
                     self.loading_screen.start(update, text=True, duration=750, key_end=False)
