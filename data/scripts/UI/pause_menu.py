@@ -1,24 +1,27 @@
 import pygame as pg
+from ..utils import scale
+from copy import copy
 
 
 class PauseMenu:
 
-    def __init__(self, display):
+    def __init__(self, display, ui):
 
 
         self.screen = display
         self.W, self.H = self.screen.get_size()
 
         self.font = pg.font.Font("data/database/pixelfont.ttf", 25)
+        self.background = scale(ui.parse_sprite("catalog_button.png"), 5)
 
         self.buttons = [
-            self.font.render("Resume", True, (255, 255, 255)),
-            self.font.render("Settings", True, (255, 255, 255)),
-            self.font.render("Save & Quit", True, (255, 255, 255)),
+            self.font.render("Resume", True, (0, 0, 0)),
+            self.font.render("Settings", True, (0, 0, 0)),
+            self.font.render("Save & Quit", True, (0, 0, 0)),
         ]
         self.btn_rects = [
             button.get_rect(center=(self.W//2, ((
-                self.H//2-button.get_height()*(len(self.buttons)*2-1)//2)+i*2*button.get_height()
+                self.H//2-button.get_height()*(len(self.buttons)*2-1)//2)+i*2*button.get_height()+15
             ))) for i, button in enumerate(self.buttons)
         ]
         self.funcs = {
@@ -68,11 +71,14 @@ class PauseMenu:
         events = self.handle_events()
         if events is not None:
             return events
+        
+        self.screen.blit(self.background, self.background.get_rect(center=(self.W//2, self.H//2)))
         for i in range(len(self.buttons)):
             if self.btn_rects[i].collidepoint(pg.mouse.get_pos()):
-                pg.draw.rect(self.screen, (255, 0, 255, 0), self.btn_rects[i])
-            else:
-                pg.draw.rect(self.screen, (0, 255, 255, 0), self.btn_rects[i])
+                r = copy(self.btn_rects[i])
+                r = pg.Rect(0, 0, r.w*1.2, r.h*1.2)
+                r.center=self.btn_rects[i].center
+                pg.draw.rect(self.screen, (255, 255, 255), r, 2)
             self.screen.blit(self.buttons[i], self.btn_rects[i])
 
         
