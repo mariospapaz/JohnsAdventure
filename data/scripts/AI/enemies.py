@@ -34,7 +34,8 @@ class Enemy:
         self.x, self.y = pos
 
         # LIFE
-        self.hp = self.MAX_HP = hp
+        self.hp = self.MAX_HP = self.show_hp = hp
+        self.xp_available = xp_drop
         self.xp_drop = xp_drop
         self.endurance = 0
         self.show_life_bar = True
@@ -217,10 +218,10 @@ class Enemy:
         """Draw a life bar if the enemy is not at its max hp"""
         if self.MAX_HP != self.hp:
             # Outline
-            pg.draw.rect(self.screen, (0, 0, 0), [self.pos[0], self.pos[1] - 20, self.current_sprite.get_width(), 18])
+            pg.draw.rect(self.screen, (0, 0, 0), [self.pos[0], self.pos[1] - 12, self.current_sprite.get_width(), 10])
             
             # Health Bar
-            pg.draw.rect(self.screen, (255, 0, 0), [self.pos[0] + 2 , self.pos[1] - 18, int((self.current_sprite.get_width()/self.MAX_HP)*self.hp) - 2, 14])
+            pg.draw.rect(self.screen, (255, 0, 0), [self.pos[0], self.pos[1] - 12, int((self.current_sprite.get_width()/self.MAX_HP)*self.show_hp) - 2, 8])
 
             pg.draw.rect(self.screen, (255,255,255), self.rect, 1)
 
@@ -262,13 +263,15 @@ class Enemy:
         self.update_states()
         self.animate()
 
-    def update(self, scroll):
+    def update(self, scroll, dt):
 
         """We gather all the methods needed to make the enemy work here.
         We pass the scroll."""
 
         # update the life bar if it's shown
         if self.show_life_bar:
+            if self.show_hp >= self.hp:
+                self.show_hp -= dt*16*abs((self.show_hp-self.hp)//3+1)
             self.life_bar()
 
         # update the damage pop ups
@@ -293,4 +296,4 @@ class Dummy(Enemy):
             idle_coo=[0, 0, 34, 48, 1, 4],
             hit_coo=[0, 48, 34, 48, 4, 4]
         )
-        self.xp_drop = xp_drop
+        self.xp_drop = self.xp_available = xp_drop

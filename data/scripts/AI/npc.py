@@ -31,8 +31,7 @@ class NPC:
                  move_right=None,
                  move_down=None,
                  move_up=None,
-                 tell_story = "",
-                 being_interacted:bool=False
+                 tell_story = ""
                  ):
 
         self.IDENTITY = "NPC"  # -> useful to check fastly the type of object we're dealing with
@@ -57,7 +56,10 @@ class NPC:
         # ANIMATION
         self.anim_delay = 0
         self.anim_index = 0
-        self.anim_duration = 100
+        self.anim_duration = {
+            "idle": 100,
+            "move": 100
+        }
 
         # Story telling
 
@@ -113,7 +115,7 @@ class NPC:
         if type(current_anim) is dict:
             current_anim = current_anim[self.direction]
 
-        if pg.time.get_ticks() - self.anim_delay > self.anim_duration:
+        if pg.time.get_ticks() - self.anim_delay > self.anim_duration[self.state]:
             self.anim_delay = pg.time.get_ticks()
             self.anim_index = (self.anim_index + 1) % len(current_anim)
             self.image = current_anim[self.anim_index]
@@ -160,18 +162,16 @@ class MovingNPC(NPC):
                  move_right=None,
                  move_down=None,
                  move_up=None,
-                 tell_story=None,
-                 being_interacted:bool=False
+                 tell_story=None
                  ):
 
         super().__init__(
-            True,pos,sprite_sheet_path,idle,idle_left,idle_right,idle_down,idle_up,move_anim,move_left,move_right,move_down,move_up, tell_story, being_interacted
+            True,pos,sprite_sheet_path,idle,idle_left,idle_right,idle_down,idle_up,move_anim,move_left,move_right,move_down,move_up, tell_story
         )
 
         self.movement = movement
         self.range_rect = range_rect
         self.velocity = velocity
-        self.being_interacted = being_interacted
 
     def check_outside_rect(self):
         match self.direction:
@@ -187,7 +187,7 @@ class MovingNPC(NPC):
     def move(self):
 
         # If the player has not click the button, keep the npc moving
-        if not self.being_interacted:
+        if not self.interacting:
             match self.direction:
                 case "left":
                     self.rect.x -= self.velocity[0] if self.move_ability["left"] else 0
@@ -240,7 +240,7 @@ class MovingNPC(NPC):
 
 class Mau(MovingNPC):
 
-    def __init__(self, dep_pos, range_,  tell_story = "", being_interacted:bool=False):
+    def __init__(self, dep_pos, range_,  tell_story = ""):
 
         super().__init__(
             pos=dep_pos,
@@ -254,12 +254,14 @@ class Mau(MovingNPC):
             move_anim=True,
             move_right=[0, 0, 43, 33, 2, 3],
             move_left=[0, 0, 43, 33, 2, 3, "flip"],
-            tell_story='mau',
-            being_interacted = False
+            tell_story='mau'
         )
 
         self.it_re_size = (75, 100)
-
+        self.anim_duration = {
+            "idle": 750,
+            "move": 100
+        }
 
 class Cynthia(NPC):
 
@@ -274,5 +276,8 @@ class Cynthia(NPC):
         )
         self.direction = "down"
         self.state = "idle"
-        self.anim_duration = 750
+        self.anim_duration = {
+            "idle": 750,
+            "move": 100
+        }
         self.it_re_size = (90, 60)
