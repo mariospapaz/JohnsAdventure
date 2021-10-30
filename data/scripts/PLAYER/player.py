@@ -285,7 +285,8 @@ class Player:
                         obj.deal_damage(self.modified_damages+crit, crit>0) if self.current_combo != self.last_attack else obj.deal_damage(self.modified_damages*self.max_combo_multiplier+crit, crit>0)
                         self.inventory.get_equiped("Weapon").start_special_effect(obj)
                     if obj.hp <= 0: # Check if its dead , give xp to the player
-                        self.experience += obj.xp_drop
+                        self.experience += obj.xp_available
+                        obj.xp_available = 0
 
     def attack(self, pos):
 
@@ -431,7 +432,7 @@ class Player:
         )
         equiped = self.inventory.get_equiped("Weapon")
         if hasattr(equiped, "special_effect"):
-            equiped.special_effect()
+            equiped.special_effect(self)
 
         # if player presses interaction key and is in a interaction zone
         if self.Interactable and self.is_interacting:

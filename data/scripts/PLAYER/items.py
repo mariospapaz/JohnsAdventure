@@ -48,7 +48,7 @@ class Weapon:
 
         pass
 
-    def special_effect(self):
+    def special_effect(self, player_instance):
         # Here the devs can pass a function that affect the object hit by a special effect
 
         pass
@@ -110,7 +110,7 @@ class Knight_Sword(Weapon):
                 self.affecting_bleed[id(obj)] = True
                 self.last_tick[id(obj)] = pg.time.get_ticks()
 
-    def special_effect(self):
+    def special_effect(self, player_instance):
 
         """Apply bleeding effect, if the cooldown has passed, """
 
@@ -122,6 +122,9 @@ class Knight_Sword(Weapon):
                 if pg.time.get_ticks() - self.last_tick[id(obj)] > self.tick_cd:
                     self.last_tick[id(obj)] = pg.time.get_ticks()
                     obj.deal_damage(self.bleed_damages, False, endurance_ignorance=True)
+                    if obj.hp <= 0:
+                        player_instance.experience += obj.xp_available
+                        obj.xp_available = 0
 
 
 class ItemSorter:
