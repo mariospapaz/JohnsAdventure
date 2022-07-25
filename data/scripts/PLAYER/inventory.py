@@ -67,21 +67,19 @@ class Inventory:
                 # track if the item is blitted outside of the ui, if so it breaks the loop
                 if index * item.image.get_height() + 16 > self.uii_rect.height - 15:
                     break
-
-                damages = parent_class.inventory.get_equipped("Weapon").damage if parent_class.inventory.get_equipped(
-                    "Weapon") is not None else 0
+                
+                weapon = parent_class.inventory.get_equipped("Weapon")
+                damages = weapon.damage if weapon is not None else 0
+               
                 # display the item on the screen
                 item.update(self.inv_menu, (self.uii_rect.x + 25, index * item.image.get_height() + 12), damages,
                             add_pos=self.im_rect.topleft)
 
-            # showing a scroll bar
-            # h = self.uii_rect.height / item_l
-            # step = h / item_l * self.index_scroll * item_l
-            # pg.draw.rect(self.inv_menu, (255, 0, 0), [self.uii_rect.right-10, step+10, 5, h * 1.5])
-            self.screen.blit(self.inv_menu, self.im_rect)  # Show menu
+              
+            # Show menu
+            self.screen.blit(self.inv_menu, self.im_rect)  
             self.screen.blit(self.font.render(f"{item_l}/32", True, (0, 0, 0)),
-                             (self.im_rect[0] + 340, self.im_rect[1] + 175))  # Show menu
-
+                             (self.im_rect[0] + 340, self.im_rect[1] + 175)) 
             self.screen.blit(self.font.render(f"HP Potions:{parent_class.health_potions}", True, (0, 0, 0)),
                              (self.im_rect[0] + 50, self.im_rect[1] + 175))
 
