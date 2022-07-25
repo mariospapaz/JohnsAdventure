@@ -84,8 +84,14 @@ def flip_horizontal(img):
     return pygame.transform.flip(img, False, True)
 
 
-def get_sprite(spritesheet, x, y, w, h):  # Gets NPC from spritesheet
-    sprite = pygame.Surface((w, h)).convert()
-    sprite.set_colorkey((255, 255, 255))
-    sprite.blit(spritesheet, (0, 0), (x, y, w, h))
-    return sprite
+def get_sprite(spritesheet: pygame.Surface, x, y, w, h) -> pygame.Surface:  # Gets NPC from spritesheet
+
+    rect = pygame.Rect(
+        x, y, 
+        w if x + w <= (W := spritesheet.get_width()) else abs(W - x),  # adapt size if sprite goes out of the 
+        h if y + h <= (H := spritesheet.get_height()) else abs(H - y)  # sheet.
+    )
+    result = pygame.Surface((w, h)) if x >= W or y >= H else spritesheet.subsurface(rect).convert()
+    result.set_colorkey((255, 255, 255))
+    
+    return result
