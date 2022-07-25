@@ -1,5 +1,4 @@
 import pygame as pg
-from .items import ItemSorter
 from ..utils import scale, get_sprite
 from copy import copy
 from ..utils import resource_path
@@ -31,13 +30,9 @@ class Inventory:
         self.hover_color = self.ui_inv.get_at((20, 20))
         self.hover_color = [self.hover_color[0] - 25, self.hover_color[1] - 25, self.hover_color[2] - 25]
 
-        self.show_menu = False  # Inventory is shown if it's True
-
-        # Player's items:
-        self.item_sorter = ItemSorter  # put this to avoid unused import
-        self.items = []  # -> self.item_sorter.weapons["Knight_Sword"]()
-        self.index_scroll = 0  # Useful to track the scrolling
-
+        self.show_menu = False  
+        self.items = [] 
+        self.index_scroll = 0 
         self.backup_item_len = len(self.items)
 
     def scroll_down(self):
